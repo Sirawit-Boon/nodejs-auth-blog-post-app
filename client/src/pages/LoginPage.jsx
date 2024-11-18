@@ -1,13 +1,36 @@
 import { useState } from "react";
+import axios from "axios";
 
 function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // 🐨 Todo: Exercise #4
     //  นำ Function `login` ใน AuthContext มา Execute ใน Event Handler ตรงนี้
+
+    try {
+      const login = async (data) => {
+        return axios.post("http://localhost:4000/login", data);
+      };
+
+       const response = await login({ username, password });
+       if (response.status === 200) {
+        alert("Login successful!");
+        localStorage.setItem("token", response.data.token);
+       }
+    } catch (error) {
+       if (
+         error.response &&
+         error.response.data &&
+         error.response.data.message
+       ) {
+         alert(`Login failed: ${error.response.data.message}`);
+       } else {
+         alert("An error occurred. Please try again.");
+       }
+    }
   };
 
   return (
