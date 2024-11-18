@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -6,10 +7,34 @@ function RegisterPage() {
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // 🐨 Todo: Exercise #2
     // นำ Function `register` ใน AuthContext มา Execute ใน Event Handler ตรงนี้
+    const register = async (data) => {
+      return axios.post("http://localhost:4000/register", data);
+    };
+
+    try {
+      const response = await register({
+        username,
+        password,
+        firstName,
+        lastName,
+      });
+      console.log(response);
+       if (response.status === 201) {
+         alert("Registration successful!");
+         }
+      
+    } catch (error) {
+      if (error.response) {
+        // แสดงข้อความแจ้งข้อผิดพลาดจาก API
+        alert(`Registration failed: ${error.response.data.message}`);
+      } else {
+        alert("An error occurred. Please try again.");
+      }
+    }
   };
 
   return (
