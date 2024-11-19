@@ -7,9 +7,7 @@ const protect = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1]; // ดึง Token จาก Header "Authorization"
 
   if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Unauthorized. No token provided." });
+    return res.status(401).json({ message: "Token has invalid format." });
   }
 
   try {
@@ -17,7 +15,7 @@ const protect = (req, res, next) => {
     req.user = decoded; // เก็บข้อมูลผู้ใช้จาก Token ใน `req.user`
     next(); // เรียกใช้ Middleware ถัดไป
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized. Invalid token." });
+    return res.status(401).json({ message: "Token is invalid." });
   }
 };
 
